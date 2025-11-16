@@ -1,11 +1,11 @@
 package org.ivcode.ai.synapp
 
 import com.fasterxml.jackson.databind.DeserializationFeature
-import io.github.ollama4j.models.chat.OllamaChatTokenHandler
 import io.github.ollama4j.utils.Utils
 import org.ivcode.ai.synapp.agent.OllamaChatAgent
 import org.ivcode.ai.synapp.agent.OllamaChatAgentFactory
 import org.ivcode.ai.synapp.config.OllamaConfig
+import org.ivcode.ai.synapp.system.CliSystemMessage
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.WebApplicationType
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -21,6 +21,7 @@ class CliApp {
     @Bean
     fun runner(agentFactory: OllamaChatAgentFactory) = CommandLineRunner { args ->
         val session = agentFactory.createOllamaSession()
+        session.systemMessages.add(CliSystemMessage())
         session.startChat()
     }
 }
@@ -45,7 +46,7 @@ internal fun OllamaChatAgent.startChat() {
         if (userInput.isEmpty()) continue
 
         print("Assistant: ")
-        chat(userInput, OllamaChatTokenHandler { resp ->
+        chat(userInput) { resp ->
             val chunk = resp.message?.response
             if (!chunk.isNullOrEmpty()) {
                 print(chunk)
@@ -55,7 +56,7 @@ internal fun OllamaChatAgent.startChat() {
             if (done) {
                 println()
             }
-        })
+        }
     }
 
     // Clean exit message when the REPL loop ends.

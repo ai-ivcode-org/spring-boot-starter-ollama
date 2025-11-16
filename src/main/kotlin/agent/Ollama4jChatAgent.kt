@@ -2,19 +2,22 @@ package org.ivcode.ai.synapp.agent
 
 import io.github.ollama4j.Ollama
 import io.github.ollama4j.models.chat.*
-import org.ivcode.ai.synapp.history.InMemoryHistoryManager
 import org.ivcode.ai.synapp.history.OllamaHistoryManager
 import org.ivcode.ai.synapp.history.OllamaHistoryMessage
 import org.ivcode.ai.synapp.system.OllamaSystemMessage
 import org.ivcode.ai.synapp.utils.toSynappToolCalls
 import org.ivcode.ai.synapp.utils.withMessage
+import java.util.*
 
 class Ollama4jChatAgent(
-    private val ollama: Ollama,
-    private val model: String,
-    private val systemMessages: List<OllamaSystemMessage>? = null,
+    override val ollama: Ollama,
+    override val model: String,
+    systemMessages: List<OllamaSystemMessage>? = null,
     private val historyManager: OllamaHistoryManager,
 ): OllamaChatAgent {
+
+    override val systemMessages: MutableList<OllamaSystemMessage> = systemMessages?.toMutableList() ?: mutableListOf()
+
     override fun chat(message: String, tokenHandler: OllamaChatTokenHandler?): OllamaChatResult {
         val builder = OllamaChatRequest.builder().withModel(model)
 
@@ -34,6 +37,14 @@ class Ollama4jChatAgent(
         historyManager.updateHistoryFromResponse(response)
 
         return response
+    }
+
+    override fun getSessionId(): UUID {
+        return historyManager.id
+    }
+
+    override fun getChatHistory(): List<OllamaHistoryMessage> {
+        return historyManager.getMessages()
     }
 
     private fun OllamaChatRequest.withHistory() {
@@ -67,17 +78,4 @@ class Ollama4jChatAgent(
             }
         )
     }
-}
-
-
-fun Ollama.createSession(
-    model: String,
-    systemMessages: List<OllamaSystemMessage>? = null,
-): Ollama4jChatAgent {
-    return Ollama4jChatAgent(
-        ollama = this,
-        model = model,
-        systemMessages = systemMessages,
-        historyManager = InMemoryHistoryManager(),
-    )
 }
