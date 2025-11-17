@@ -29,14 +29,6 @@ class OllamaCli {
     }
 }
 
-fun main(args: Array<String>) {
-    Utils.getObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-
-    val app = SpringApplication(OllamaCli::class.java)
-    app.webApplicationType = WebApplicationType.NONE // ensures no web server
-    app.run(*args)
-}
-
 internal fun OllamaChatAgent.startChat() {
 
     // Main REPL loop: read user input, send a chat request including history, stream response.
