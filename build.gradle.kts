@@ -23,19 +23,16 @@ s3mvn {
 
 dependencies {
     // SLF4J Logging
-    implementation("org.slf4j:slf4j-api:2.0.9")
+    api("org.slf4j:slf4j-api:2.0.9")
     runtimeOnly("org.slf4j:slf4j-simple:2.0.9")
 
     // Kotlin reflection (needed when you want to read KClass annotations, properties, etc.)
-    implementation("org.jetbrains.kotlin:kotlin-reflect:2.1.10")
+    api("org.jetbrains.kotlin:kotlin-reflect:2.1.10")
 
-    implementation("io.github.ollama4j:ollama4j:1.1.4")
+    api("io.github.ollama4j:ollama4j:1.1.4")
 
     // Spring Boot
-    implementation("org.springframework.boot:spring-boot-starter")
-
-    // Kotlin CLI
-    implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.6")
+    api("org.springframework.boot:spring-boot-starter")
 
     testImplementation(kotlin("test"))
 }
