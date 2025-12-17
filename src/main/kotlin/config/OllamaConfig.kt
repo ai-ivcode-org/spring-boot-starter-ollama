@@ -26,9 +26,9 @@ const val PROPERTY_REQUEST_TIMEOUT = "ollama.requestTimeoutSeconds"
 
 @AutoConfiguration
 class OllamaConfig(
-    @Value("\${$PROPERTY_URL:http://localhost:11434}") private val url: String,
-    @Value("\${$PROPERTY_MODEL_NAME:gpt-oss:20b}") private val model: String,
-    @Value("\${$PROPERTY_REQUEST_TIMEOUT:#{null}}") private val requestTimeoutSeconds: Long?,
+    @param:Value("\${$PROPERTY_URL:http://localhost:11434}") private val url: String,
+    @param:Value("\${$PROPERTY_MODEL_NAME:gpt-oss:20b}") private val model: String,
+    @param:Value("\${$PROPERTY_REQUEST_TIMEOUT:#{null}}") private val requestTimeoutSeconds: Long?,
 ) {
 
     @Bean("tool_services.system_messages")
